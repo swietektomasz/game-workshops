@@ -1,25 +1,85 @@
 import * as PIXI from 'pixi.js'
-import blob from 'assets/blob.png'
+import { keyboard } from './keyboard'
 
 const app = new PIXI.Application({ backgroundColor: 0x1099bb })
 document.body.appendChild(app.view)
 
-// create a new Sprite from an image path
-const bunny = PIXI.Sprite.from(blob)
+app.loader.add('Player/sprites.json').load(setup)
 
-// center the sprite's anchor point
-bunny.anchor.set(0.5)
+let player, state
 
-// move the sprite to the center of the screen
-bunny.x = app.screen.width / 2
-bunny.y = app.screen.height / 2
+function setup() {
+  const anim = []
 
-app.stage.addChild(bunny)
+  for (let i = 0; i < 8; i++) {
+    anim.push(PIXI.Texture.from(`run-spritesheet_0${i}.png`))
+  }
+  player = new PIXI.AnimatedSprite(anim)
 
-// Listen for animate update
-app.ticker.add(delta => {
-  // just for fun, let's rotate mr rabbit a little
-  // delta is 1 if running at 100% performance
-  // creates frame-independent transformation
-  bunny.rotation += 0.1 * delta
-})
+  player.x = app.screen.width / 2
+  player.y = app.screen.height / 2
+  player.anchor.set(0.5)
+  player.animationSpeed = 0.2
+  player.play()
+  player.vx = 0
+  player.vy = 0
+  app.stage.addChild(player)
+
+  let left = keyboard('ArrowLeft'),
+    up = keyboard('ArrowUp'),
+    right = keyboard('ArrowRight'),
+    down = keyboard('ArrowDown')
+
+  left.press = () => {
+    player.vx = -5
+    player.vy = 0
+  }
+  left.release = () => {
+    if (!right.isDown && player.vy === 0) {
+      player.vx = 0
+    }
+  }
+
+  up.press = () => {
+    player.vy = -5
+    player.vx = 0
+  }
+  up.release = () => {
+    if (!down.isDown && player.vx === 0) {
+      player.vy = 0
+    }
+  }
+
+  right.press = () => {
+    player.vx = 5
+    player.vy = 0
+  }
+  right.release = () => {
+    if (!left.isDown && player.vy === 0) {
+      player.vx = 0
+    }
+  }
+
+  down.press = () => {
+    player.vy = 5
+    player.vx = 0
+  }
+  down.release = () => {
+    if (!up.isDown && player.vx === 0) {
+      player.vy = 0
+    }
+  }
+
+  state = play
+
+  app.ticker.add(delta => gameLoop(delta))
+}
+
+function gameLoop(delta) {
+  state(delta)
+}
+
+function play() {
+  player.x += player.vx
+  player.y += player.vy
+}

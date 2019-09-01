@@ -27,6 +27,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      title: 'GameDev Workshops',
       hash: true,
     }),
   ],
@@ -34,7 +35,7 @@ const config = {
     modules: [path.resolve('./src'), path.resolve('./node_modules')],
   },
   devServer: {
-    contentBase: __dirname + '/public',
+    contentBase: [__dirname + '/public', __dirname + '/src/assets'],
     compress: true,
     port: 9000,
     open: true,

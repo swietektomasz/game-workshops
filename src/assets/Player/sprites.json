@@ -1,0 +1,156 @@
+{
+	"frames": {
+		"run-spritesheet_01.png": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 23,
+				"h": 34
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 23,
+				"h": 34
+			},
+			"sourceSize": {
+				"w": 23,
+				"h": 34
+			}
+		},
+		"run-spritesheet_02.png": {
+			"frame": {
+				"x": 45,
+				"y": 33,
+				"w": 20,
+				"h": 32
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 20,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 20,
+				"h": 32
+			}
+		},
+		"run-spritesheet_03.png": {
+			"frame": {
+				"x": 66,
+				"y": 33,
+				"w": 17,
+				"h": 32
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 17,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 17,
+				"h": 32
+			}
+		},
+		"run-spritesheet_04.png": {
+			"frame": {
+				"x": 45,
+				"y": 0,
+				"w": 20,
+				"h": 32
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 20,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 20,
+				"h": 32
+			}
+		},
+		"run-spritesheet_05.png": {
+			"frame": {
+				"x": 24,
+				"y": 0,
+				"w": 20,
+				"h": 34
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 20,
+				"h": 34
+			},
+			"sourceSize": {
+				"w": 20,
+				"h": 34
+			}
+		},
+		"run-spritesheet_06.png": {
+			"frame": {
+				"x": 66,
+				"y": 0,
+				"w": 19,
+				"h": 32
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 19,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 19,
+				"h": 32
+			}
+		},
+		"run-spritesheet_07.png": {
+			"frame": {
+				"x": 24,
+				"y": 35,
+				"w": 20,
+				"h": 32
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 20,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 20,
+				"h": 32
+			}
+		},
+		"run-spritesheet_08.png": {
+			"frame": {
+				"x": 0,
+				"y": 35,
+				"w": 23,
+				"h": 32
+			},
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 23,
+				"h": 32
+			},
+			"sourceSize": {
+				"w": 23,
+				"h": 32
+			}
+		}
+	},
+	"meta": {
+		"image": "sprites.png",
+		"size": {
+			"w": 86,
+			"h": 68
+		},
+		"scale": "1"
+	}
+}
