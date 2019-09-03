@@ -1,12 +1,16 @@
 import * as PIXI from 'pixi.js'
 import { keyboard } from './keyboard'
+import { rectangleCollisionCheck } from './collision'
 
 const app = new PIXI.Application({ backgroundColor: 0x1099bb })
 document.body.appendChild(app.view)
 
-app.loader.add('Player/sprites.json').load(setup)
+app.loader
+  .add('Player/sprites.json')
+  .add('Tileset/sprites.json')
+  .load(setup)
 
-let player, state
+let player, tiledGround
 
 function setup() {
   const anim = []
@@ -16,14 +20,20 @@ function setup() {
   }
   player = new PIXI.AnimatedSprite(anim)
 
-  player.x = app.screen.width / 2
-  player.y = app.screen.height / 2
+  player.x = app.screen.width / 2 - 50
+  player.y = app.screen.height / 2 - 50
   player.anchor.set(0.5)
-  player.animationSpeed = 0.2
+  player.animationSpeed = 0.3
   player.play()
   player.vx = 0
   player.vy = 0
   app.stage.addChild(player)
+
+  const ground = PIXI.Texture.from('groundtile.png')
+  tiledGround = new PIXI.TilingSprite(ground, app.screen.width, ground.height)
+  tiledGround.y = app.screen.height - ground.height
+
+  app.stage.addChild(tiledGround)
 
   let left = keyboard('ArrowLeft'),
     up = keyboard('ArrowUp'),
@@ -32,54 +42,41 @@ function setup() {
 
   left.press = () => {
     player.vx = -5
-    player.vy = 0
   }
   left.release = () => {
-    if (!right.isDown && player.vy === 0) {
-      player.vx = 0
-    }
+    player.vx = 0
   }
 
   up.press = () => {
     player.vy = -5
-    player.vx = 0
   }
   up.release = () => {
-    if (!down.isDown && player.vx === 0) {
-      player.vy = 0
-    }
+    player.vy = 0
   }
 
   right.press = () => {
     player.vx = 5
-    player.vy = 0
   }
   right.release = () => {
-    if (!left.isDown && player.vy === 0) {
-      player.vx = 0
-    }
+    player.vx = 0
   }
 
   down.press = () => {
     player.vy = 5
-    player.vx = 0
   }
   down.release = () => {
-    if (!up.isDown && player.vx === 0) {
-      player.vy = 0
-    }
+    player.vy = 0
   }
 
-  state = play
-
-  app.ticker.add(delta => gameLoop(delta))
+  app.ticker.add(delta => play(delta))
 }
 
-function gameLoop(delta) {
-  state(delta)
-}
+function play(delta) {
+  player.y += delta
 
-function play() {
-  player.x += player.vx
+  if (rectangleCollisionCheck(player, tiledGround)) {
+    player.y = tiledGround.y - player.height / 2
+  }
+
   player.y += player.vy
 }
