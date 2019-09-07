@@ -7,7 +7,6 @@ A simple repository with webpack and PIXI.js for the purpose of running game dev
 ```
 git clone https://github.com/swietektomasz/game-workshops
 cd game-workshops
-git remote remove origin
-yarn install
+yarn
 yarn start
 ```
