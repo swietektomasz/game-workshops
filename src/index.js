@@ -2,81 +2,96 @@ import * as PIXI from 'pixi.js'
 import { keyboard } from './keyboard'
 import { rectangleCollisionCheck } from './collision'
 
-const app = new PIXI.Application({ backgroundColor: 0x1099bb })
+const app = new PIXI.Application({ height: 200, width: 400, backgroundColor: 0x1099bb })
 document.body.appendChild(app.view)
 
-app.loader
-  .add('Player/sprites.json')
-  .add('Tileset/sprites.json')
-  .load(setup)
+app.loader.add('sprites.json').load(setup)
 
-let player, tiledGround
+let player, ground, blob, scoreText
+let score = 0
 
 function setup() {
+  const groundTexture = PIXI.Texture.from('groundtile.png')
+  ground = new PIXI.TilingSprite(groundTexture, app.screen.width, groundTexture.height)
+  ground.y = app.screen.height - ground.height
+
+  app.stage.addChild(ground)
+
   const anim = []
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 1; i < 8; i++) {
     anim.push(PIXI.Texture.from(`run-spritesheet_0${i}.png`))
   }
   player = new PIXI.AnimatedSprite(anim)
 
-  player.x = app.screen.width / 2 - 50
-  player.y = app.screen.height / 2 - 50
-  player.anchor.set(0.5)
-  player.animationSpeed = 0.3
+  player.x = 50
+  player.y = app.screen.height - ground.height - player.height
+  player.animationSpeed = 0.2
   player.play()
   player.vx = 0
   player.vy = 0
+  player.jumping = false
   app.stage.addChild(player)
 
-  const ground = PIXI.Texture.from('groundtile.png')
-  tiledGround = new PIXI.TilingSprite(ground, app.screen.width, ground.height)
-  tiledGround.y = app.screen.height - ground.height
+  let jump = keyboard('Space')
 
-  app.stage.addChild(tiledGround)
-
-  let left = keyboard('ArrowLeft'),
-    up = keyboard('ArrowUp'),
-    right = keyboard('ArrowRight'),
-    down = keyboard('ArrowDown')
-
-  left.press = () => {
-    player.vx = -5
-  }
-  left.release = () => {
-    player.vx = 0
-  }
-
-  up.press = () => {
-    player.vy = -5
-  }
-  up.release = () => {
-    player.vy = 0
+  let jumpParabole = [5, 3, 1, -2, -4, -5]
+  jump.press = () => {
+    let counter = 0
+    if (!player.jumping) {
+      player.jumping = true
+      const flyer = setInterval(() => {
+        player.vy = jumpParabole[counter]
+        counter++
+      }, 200)
+      setTimeout(function() {
+        player.vy = 0
+        player.y = app.screen.height - ground.height - player.height
+        player.jumping = false
+        clearInterval(flyer)
+      }, 1300)
+    }
   }
 
-  right.press = () => {
-    player.vx = 5
-  }
-  right.release = () => {
-    player.vx = 0
-  }
+  blob = new PIXI.Sprite.from('blob.png')
+  blob.height = 16
+  blob.width = 16
+  blob.x = app.screen.width - blob.width
+  blob.y = app.screen.height - ground.height - blob.height
+  blob.vx = 2
+  app.stage.addChild(blob)
 
-  down.press = () => {
-    player.vy = 5
-  }
-  down.release = () => {
-    player.vy = 0
-  }
+  scoreText = new PIXI.Text(score, { fontFamily: 'Arial', fontSize: 16 })
+  scoreText.x = 10
+  scoreText.y = 10
+
+  app.stage.addChild(scoreText)
 
   app.ticker.add(delta => play(delta))
 }
 
-function play(delta) {
-  player.y += delta
-
-  if (rectangleCollisionCheck(player, tiledGround)) {
-    player.y = tiledGround.y - player.height / 2
+function createObstacle() {
+  if (score % 200 === 0) {
+    blob.x = app.screen.width - blob.width
+    blob.y = app.screen.height - ground.height - blob.height
+    blob.vx = Math.random() * 4 + 2
   }
+}
 
-  player.y += player.vy
+function play() {
+  score++
+  scoreText.text = `Your score: ${score}`
+
+  createObstacle()
+  player.y -= player.vy
+  ground.tilePosition.x -= 1
+  blob.x -= blob.vx
+
+  if (rectangleCollisionCheck(player, ground)) {
+    player.vy = 0
+    player.jumping = false
+  }
+  if (rectangleCollisionCheck(player, blob)) {
+    app.stop()
+  }
 }
