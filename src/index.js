@@ -2,9 +2,14 @@ import * as PIXI from 'pixi.js'
 import { keyboard } from './keyboard'
 import { rectangleCollisionCheck } from './collision'
 
-let app = new PIXI.Application({ height: 200, width: 400, backgroundColor: 0x1099bb })
-document.body.appendChild(app.view)
-start()
+let app;
+function init() {
+  app = new PIXI.Application({ height: 200, width: 400, backgroundColor: 0x1099bb })
+  document.body.replaceChild(app.view, document.body.childNodes[0])
+  start()
+}
+
+init();
 
 let player, ground, blob, scoreText, controlsText, startButton, resetButton
 let score = 0
@@ -115,7 +120,7 @@ function finish() {
   resetButton.y = app.screen.height / 2 - resetButton.height / 2
 
   resetButton.on('click', () => {
-    //reset
+    init();
   })
 
   app.stage.addChild(resetButton, finishText)
