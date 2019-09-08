@@ -2,16 +2,16 @@ import * as PIXI from 'pixi.js'
 import { keyboard } from './keyboard'
 import { rectangleCollisionCheck } from './collision'
 
-let app, player, ground, blob, scoreText, controlsText, startButton, resetButton, score;
+let app, player, ground, blob, scoreText, controlsText, startButton, resetButton, score
 
 function init() {
-  score = 0;
+  score = 0
   app = new PIXI.Application({ height: 200, width: 400, backgroundColor: 0x1099bb })
   document.body.replaceChild(app.view, document.body.childNodes[0])
-  start()
+  app.loader.add('sprites.json').load(start)
 }
 
-init();
+init()
 
 function setup() {
   const groundTexture = PIXI.Texture.from('groundtile.png')
@@ -38,7 +38,7 @@ function setup() {
 
   let jump = keyboard('Space')
 
-  let jumpParabole = [3, 2, 1, -1, -2, -3]
+  let jumpParabole = [3, 2, 1, -1, -2, -3, -4]
   jump.press = () => {
     let counter = 0
     if (!player.jumping) {
@@ -50,10 +50,10 @@ function setup() {
         counter++
       }, 100)
       setTimeout(function() {
+        player.jumping = false
         player.animationSpeed = 0.2
         player.vy = 0
         player.y = app.screen.height - ground.height - player.height
-        player.jumping = false
         clearInterval(flyer)
       }, 800)
     }
@@ -99,7 +99,7 @@ function start() {
   startButton.y = app.screen.height / 2 - startButton.height / 2
 
   startButton.on('click', () => {
-    app.loader.add('sprites.json').load(setup)
+    app.loader.load(setup)
     app.stage.removeChild(startButton)
   })
   app.stage.addChild(startButton)
@@ -119,7 +119,7 @@ function finish() {
   resetButton.y = app.screen.height / 2 - resetButton.height / 2
 
   resetButton.on('click', () => {
-    init();
+    init()
   })
 
   app.stage.addChild(resetButton, finishText)
