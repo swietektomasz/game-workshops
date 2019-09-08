@@ -2,17 +2,16 @@ import * as PIXI from 'pixi.js'
 import { keyboard } from './keyboard'
 import { rectangleCollisionCheck } from './collision'
 
-let app;
+let app, player, ground, blob, scoreText, controlsText, startButton, resetButton, score;
+
 function init() {
+  score = 0;
   app = new PIXI.Application({ height: 200, width: 400, backgroundColor: 0x1099bb })
   document.body.replaceChild(app.view, document.body.childNodes[0])
   start()
 }
 
 init();
-
-let player, ground, blob, scoreText, controlsText, startButton, resetButton
-let score = 0
 
 function setup() {
   const groundTexture = PIXI.Texture.from('groundtile.png')
